@@ -17,25 +17,27 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.symmetric(vertical: 2.5),
       width: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 10.0),
-      color: AppColors.SubBgColor,
       child: ListTile(
-        title: Text(
-          'Task Title',
-          style: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 22.5,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1,
-            color: AppColors.TextColor,
+        title: Padding(
+          padding: EdgeInsets.only(left: 10.0),
+          child: Text(
+            'Task Title',
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 20.0,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1,
+              color: AppColors.TextColor,
+            ),
           ),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 5.0, left: 2.0),
+          padding: const EdgeInsets.only(top: 5.0, left: 12.0),
           child: Text(
             'Date | Priority',
             style: TextStyle(
               fontFamily: 'Montserrat',
-              fontSize: 12.5,
+              fontSize: 10.0,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
               color: AppColors.SubTextColor,
@@ -48,6 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           activeColor: AppColors.TaskColor,
           value: true,
+        ),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.SubBgColor,
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
         ),
       ),
     );
