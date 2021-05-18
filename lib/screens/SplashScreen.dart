@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:todo_app/data/Colors.dart';
 import 'package:todo_app/screens/HomeScreen.dart';
+import 'package:todo_app/styles/Colors.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);

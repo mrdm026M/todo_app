@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_app/data/Colors.dart';
+import 'package:todo_app/database/DatabaseFile.dart';
+import 'package:todo_app/model/TodoModel.dart';
+import 'package:todo_app/styles/Colors.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  AddTaskScreen({Key key}) : super(key: key);
+  final Task todo;
+  final Function updateTodoList;
+  AddTaskScreen({Key key, this.todo, this.updateTodoList}) : super(key: key);
 
   @override
   _AddTaskScreenState createState() => _AddTaskScreenState();
@@ -19,6 +23,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.todo != null) {
+      _title = widget.todo.title;
+      _date = widget.todo.date;
+      _priority = widget.todo.priority;
+    }
     _dateController.text = DateFormat.yMMMMEEEEd().format(_date).toString();
   }
 
@@ -43,10 +52,27 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     }
   }
 
+  _delete() {
+    DatabaseFile.instance.deleteTodo(widget.todo.id);
+    widget.updateTodoList();
+    Navigator.pop(context);
+  }
+
   _submit() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       print('$_title, $_date, $_priority');
+
+      Task todo = Task(title: _title, date: _date, priority: _priority);
+      if (widget.todo == null) {
+        todo.status = 0;
+        DatabaseFile.instance.insertTodo(todo);
+      } else {
+        todo.id = widget.todo.id;
+        todo.status = widget.todo.status;
+        DatabaseFile.instance.updateTodo(todo);
+      }
+      widget.updateTodoList();
       Navigator.pop(context);
     }
   }
@@ -87,7 +113,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Text(
-                    'Add New Task',
+                    widget.todo == null ? 'Add New Task' : 'Update task',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 30.0,
@@ -235,7 +261,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                         child: TextButton(
                           child: Text(
-                            'Add Task',
+                            widget.todo == null ? 'Add Task' : 'Save',
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: 20.0,
@@ -259,7 +285,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           child: Text(
-                            'Cancel',
+                            widget.todo == null ? 'Cancel' : 'Delete',
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: 20.0,
@@ -269,7 +295,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             ),
                           ),
                         ),
-                        onTap: () => Navigator.pop(context),
+                        onTap: () => widget.todo == null
+                            ? Navigator.pop(context)
+                            : _delete(),
                       ),
                     ],
                   ),
